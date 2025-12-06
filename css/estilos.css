@@ -1,0 +1,187 @@
+/* ======= BASE ======= */
+:root {
+  --yt-bg: #0f0f0f;
+  --yt-surface: #212121;
+  --yt-surface-2: #181818;
+  --yt-border: #3d3d3d;
+  --yt-text: #fff;
+  --yt-text-muted: #aaaaaa;
+  --yt-accent: #3ea6ff;
+  --yt-btn: #272727;
+  --yt-btn-hover: #3f3f3f;
+  --yt-danger: #cc0000;
+}
+
+body {
+  margin: 0;
+  padding: 1.5rem;
+  background: var(--yt-bg);
+  color: var(--yt-text);
+  font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* ======= HEADER / TÍTULO ======= */
+.titulo {
+  margin-bottom: 1.8rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.titulo::before {
+  content: "";
+  width: 6px;
+  height: 32px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #e50914, #f5c518); /* barrita roja-amarilla */
+  box-shadow: 0 0 10px rgba(229, 9, 20, 0.6);
+}
+
+.titulo h1 {
+  font-family: "Bebas Neue", system-ui, sans-serif;
+  color: #fff;
+  font-size: 2.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* ======= SECCIÓN AGREGAR NOTA ======= */
+.agregarNota {
+  background: var(--yt-surface);
+  padding: 1.2rem 1.3rem;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.agregarNota label {
+  color: var(--yt-text);
+  font-size: 0.95rem;
+}
+
+.agregarNota input,
+.agregarNota textarea {
+  background: #0f0f0f;
+  border: 1px solid #3d3d3d;
+  border-radius: 6px;
+  padding: 6px 8px;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.agregarNota textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* ======= BOTONES ======= */
+button {
+  background: var(--yt-btn);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.02);
+  border-radius: 6px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+button:hover {
+  background: var(--yt-btn-hover);
+}
+
+button:active {
+  background: #4d4d4d;
+  transform: scale(0.995);
+}
+
+/* Botón principal (agregar nota) */
+.agregarNota button {
+  align-self: flex-start;
+  background: #3ea6ff;
+  color: #000;
+  border: none;
+}
+
+.agregarNota button:hover {
+  background: #67b8ff;
+}
+
+/* ======= MURAL DE NOTAS ======= */
+.mural-notas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+/* Bloque / card de cada nota */
+.nota-card {
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+.nota-oscura {
+  background: var(--yt-surface-2);
+}
+.nota-clara {
+  background: var(--yt-surface);
+}
+
+.nota-card h2 {
+  margin: 0 0 0.6rem 0;
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  font-size: 1.1rem;
+  color: #3a7bbf !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.nota-card h2::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #2e5e8f !important;
+  box-shadow: 0 0 6px rgba(46, 94, 143, 0.6) !important;
+}
+
+/* Efecto sutil al pasar el mouse */
+.nota-card:hover h2 {
+  color: #5da6e6 !important;
+  transform: translateX(2px);
+}
+
+.nota-texto {
+  margin: 0.1rem 0 0.4rem 0;
+  font-size: 0.95rem;
+  color: var(--yt-text);
+}
+
+.nota-fecha {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--yt-text-muted);
+}
+
+/* ====== RESPONSIVO ====== */
+@media (max-width: 600px) {
+  body {
+    padding: 1rem;
+  }
+
+  .agregarNota {
+    padding: 1rem;
+  }
+
+  .nota-card {
+    padding: 0.9rem 1rem;
+  }
+}
