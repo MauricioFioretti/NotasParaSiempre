@@ -30,6 +30,7 @@ const LS_NOTES_CACHE = "notas_cache_v1";
 
 // ================== HEADER UI ==================
 const header = document.querySelector("header");
+header.classList.add("app-header"); // (solo estilo)
 
 const seccionTitulo = document.createElement("section");
 seccionTitulo.classList = "titulo";
@@ -44,19 +45,35 @@ const h1 = document.createElement("h1");
 h1.innerText = "Notas para siempre";
 headerRow1.appendChild(h1);
 
-// fila 2: estado + acciones + cuenta
+// fila 2: barra (status + email) + botones
 const headerRow2 = document.createElement("div");
 headerRow2.className = "header-row header-row-2";
 seccionTitulo.appendChild(headerRow2);
 
+// contenedor general
+const authBar = document.createElement("div");
+authBar.className = "auth-bar";
+headerRow2.appendChild(authBar);
+
+// lado izq: status + cuenta
+const authLeft = document.createElement("div");
+authLeft.className = "auth-left";
+authBar.appendChild(authLeft);
+
 const syncPill = document.createElement("div");
 syncPill.className = "sync-pill";
 syncPill.innerHTML = `<span class="sync-dot"></span><span class="sync-text">Cargando…</span>`;
-headerRow2.appendChild(syncPill);
+authLeft.appendChild(syncPill);
 
+const accountPill = document.createElement("div");
+accountPill.className = "account-pill";
+accountPill.style.display = "none";
+authLeft.appendChild(accountPill);
+
+// lado der: acciones
 const headerActions = document.createElement("div");
 headerActions.className = "header-actions";
-headerRow2.appendChild(headerActions);
+authBar.appendChild(headerActions);
 
 const btnConnect = document.createElement("button");
 btnConnect.className = "btn-connect";
@@ -73,13 +90,10 @@ btnRefresh.title = "Reintentar conexión";
 btnRefresh.style.display = "none";
 headerActions.appendChild(btnRefresh);
 
-const accountPill = document.createElement("div");
-accountPill.className = "account-pill";
-accountPill.style.display = "none";
-headerRow2.appendChild(accountPill);
-
 // ================== MAIN UI ==================
 const main = document.querySelector("main");
+
+main.classList.add("app-main"); // (solo estilo)
 
 const seccionAgregar = document.createElement("section");
 seccionAgregar.classList = "agregarNota";

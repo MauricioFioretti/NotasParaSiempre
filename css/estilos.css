@@ -1,265 +1,191 @@
-/* ======= BASE ======= */
-:root {
-  --yt-bg: #0f0f0f;
-  --yt-surface: #212121;
-  --yt-surface-2: #181818;
-  --yt-border: #3d3d3d;
-  --yt-text: #fff;
-  --yt-text-muted: #aaaaaa;
-  --yt-accent: #3ea6ff;
-  --yt-btn: #272727;
-  --yt-btn-hover: #3f3f3f;
-  --yt-danger: #cc0000;
-}
-
-body {
-  margin: 0;
-  padding: 1.5rem;
-  background: var(--yt-bg);
-  color: var(--yt-text);
-  font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-/* ======= HEADER / TÍTULO ======= */
-.titulo {
-  margin-bottom: 1.8rem;
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-}
-
-.titulo::before {
-  content: "";
-  width: 6px;
-  height: 32px;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #e50914, #f5c518); /* barrita roja-amarilla */
-  box-shadow: 0 0 10px rgba(229, 9, 20, 0.6);
-}
-
-.titulo h1 {
-  font-family: "Bebas Neue", system-ui, sans-serif;
-  color: #fff;
-  font-size: 2.6rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-/* ======= SECCIÓN AGREGAR NOTA ======= */
-.agregarNota {
-  background: var(--yt-surface);
-  padding: 1.2rem 1.3rem;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-  margin-bottom: 1.5rem;
-  border: 1px solid rgba(255,255,255,0.03);
-}
-
-.agregarNota label {
-  color: var(--yt-text);
-  font-size: 0.95rem;
-}
-
-.agregarNota input,
-.agregarNota textarea {
-  background: #0f0f0f;
-  border: 1px solid #3d3d3d;
-  border-radius: 6px;
-  padding: 6px 8px;
-  color: #fff;
-  font-size: 0.95rem;
-}
-
-.agregarNota textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-/* ======= BOTONES ======= */
-button {
-  background: var(--yt-btn);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.02);
-  border-radius: 6px;
-  padding: 6px 14px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: background 0.15s ease, transform 0.1s ease;
-}
-
-button:hover {
-  background: var(--yt-btn-hover);
-}
-
-button:active {
-  background: #4d4d4d;
-  transform: scale(0.995);
-}
-
-/* Botón principal (agregar nota) */
-.agregarNota button {
-  align-self: flex-start;
-  background: #3ea6ff;
-  color: #000;
-  border: none;
-}
-
-.agregarNota button:hover {
-  background: #67b8ff;
-}
-
-/* ======= MURAL DE NOTAS ======= */
-.mural-notas {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-}
-
-/* Bloque / card de cada nota */
-.nota-card {
-  padding: 1rem 1.2rem;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.04);
-}
-
-.nota-oscura {
-  background: var(--yt-surface-2);
-}
-.nota-clara {
-  background: var(--yt-surface);
-}
-
-.nota-card h2 {
-  margin: 0 0 0.6rem 0;
-  font-family: "Montserrat", system-ui, sans-serif;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  font-size: 1.1rem;
-  color: #3a7bbf !important;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  transition: color 0.15s ease, transform 0.15s ease;
-}
-
-.nota-card h2::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: #2e5e8f !important;
-  box-shadow: 0 0 6px rgba(46, 94, 143, 0.6) !important;
-}
-
-/* Efecto sutil al pasar el mouse */
-.nota-card:hover h2 {
-  color: #5da6e6 !important;
-  transform: translateX(2px);
-}
-
-.nota-texto {
-  margin: 0.1rem 0 0.4rem 0;
-  font-size: 0.95rem;
-  color: var(--yt-text);
-}
-
-.nota-fecha {
-  margin: 0;
-  font-size: 0.8rem;
-  color: var(--yt-text-muted);
-}
-
-/* ====== RESPONSIVO ====== */
-@media (max-width: 600px) {
-  body {
-    padding: 1rem;
-  }
-
-  .agregarNota {
-    padding: 1rem;
-  }
-
-  .nota-card {
-    padding: 0.9rem 1rem;
-  }
-}
-
 /* =========================
-   HEADER (OAuth UI)
+   NOTAS PARA SIEMPRE — UI PRO
    ========================= */
-.header-row{
-  display:flex;
-  align-items:center;
-  gap:.8rem;
+
+/* ======= THEME ======= */
+:root{
+  --bg: #0b0d10;
+  --surface: rgba(255,255,255,0.06);
+  --surface-2: rgba(255,255,255,0.09);
+  --border: rgba(255,255,255,0.10);
+  --border-2: rgba(255,255,255,0.14);
+
+  --text: #ffffff;
+  --muted: rgba(255,255,255,0.68);
+
+  --accent: #3ea6ff;
+  --accent-2: #67b8ff;
+
+  --danger: #ff4d4d;
+
+  --radius: 16px;
+  --radius-sm: 12px;
+
+  --shadow: 0 14px 40px rgba(0,0,0,.45);
 }
+
+/* ======= PAGE ======= */
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  min-height:100vh;
+  padding: 22px 14px;
+  color: var(--text);
+  font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* fondo simple (más lindo y no distrae) */
+  background: var(--bg);
+}
+
+/* PC: un poco más de padding para que respire */
+@media (min-width: 900px){
+  body{
+    padding: 28px 22px;
+  }
+}
+
+/* centrado “tipo app” (en columna) */
+header, main{
+  width: 100%;
+  max-width: 620px;       /* móvil/tablet: un poco más ancho */
+  margin: 0 auto;         /* centra */
+  display: block;
+}
+
+/* Desktop: más ancho para que no quede “angosto” */
+@media (min-width: 900px){
+  header, main{
+    max-width: 860px;     /* PC: más presencia */
+  }
+}
+
+/* Pantallas grandes: todavía un poco más */
+@media (min-width: 1200px){
+  header, main{
+    max-width: 980px;
+  }
+}
+
+.app-header{
+  margin-bottom: 16px;
+}
+
+.app-main{
+  margin-top: 0;
+}
+
+/* ======= TITLE + HEADER LAYOUT ======= */
+.titulo{
+  position: relative;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 14px;
+  padding: 14px 14px 14px 14px;
+
+  /* más sutil */
+  box-shadow: 0 10px 26px rgba(0,0,0,.35);
+
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+
+
+.titulo::before{
+  content:"";
+  position:absolute;
+  left: 12px;
+  top: 12px;
+  bottom: 12px;
+  width: 6px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #e50914, #f5c518);
+  box-shadow: 0 0 14px rgba(229, 9, 20, 0.35);
+}
+
 .header-row-1{
-  justify-content:flex-start;
-}
-.header-row-2{
-  justify-content:space-between;
-  flex-wrap:wrap;
-  gap:.8rem;
+  padding-left: 14px;
 }
 
-.header-actions{
+.titulo h1{
+  margin: 0;
+  font-family: "Bebas Neue", system-ui, sans-serif;
+  font-size: clamp(1.85rem, 6vw, 2.6rem);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  line-height: 1.0;
+}
+
+.header-row-2{
+  padding-left: 14px;
+}
+
+/* barra auth */
+.auth-bar{
   display:flex;
   align-items:center;
-  gap:.5rem;
+  justify-content:space-between;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-.btn-connect{
-  background:#3ea6ff;
-  color:#000;
-  border:none;
+.auth-left{
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
 }
-.btn-connect:hover{ background:#67b8ff; }
 
-.btn-refresh{
-  background:#303030;
-}
-.btn-refresh:hover{ background:#4b4b4b; }
-
+/* ======= PILLS ======= */
+.sync-pill,
 .account-pill{
   display:inline-flex;
   align-items:center;
-  padding:.28rem .55rem;
-  border-radius:999px;
-  font-size:.85rem;
-  border:1px solid rgba(255,255,255,0.08);
-  background:rgba(255,255,255,0.04);
-  color: var(--yt-text-muted);
-  max-width: 52vw;
+  gap:.5rem;
+  padding: .42rem .65rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,0.18);
+  color: var(--muted);
+  user-select:none;
+}
+
+.account-pill{
+  max-width: 320px;
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
 }
 
-/* Estado sync pill */
-.sync-pill{
-  display:inline-flex;
-  align-items:center;
-  gap:.5rem;
-  padding:.35rem .6rem;
-  border-radius:999px;
-  font-size:.85rem;
-  border:1px solid rgba(255,255,255,0.08);
-  background:rgba(255,255,255,0.04);
-  color: var(--yt-text-muted);
-  user-select:none;
-}
 .sync-dot{
-  width:9px;
-  height:9px;
-  border-radius:999px;
-  background: var(--yt-text-muted);
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.55);
 }
-.sync-pill.ok{ color:#c8facc; border-color: rgba(46,160,67,.35); }
+
+/* estados */
+.sync-pill.ok{
+  color: rgba(200,250,204,0.95);
+  border-color: rgba(46,160,67,.35);
+}
 .sync-pill.ok .sync-dot{ background:#2ea043; }
-.sync-pill.saving{ color:#dbeafe; border-color: rgba(62,166,255,.35); }
-.sync-pill.saving .sync-dot{ background: var(--yt-accent); animation:pulse 1s infinite; }
-.sync-pill.offline{ color:#ffe9c2; border-color: rgba(210,153,34,.35); }
+
+.sync-pill.saving{
+  color: rgba(219,234,254,0.98);
+  border-color: rgba(62,166,255,.35);
+}
+.sync-pill.saving .sync-dot{
+  background: var(--accent);
+  animation: pulse 1s infinite;
+}
+
+.sync-pill.offline{
+  color: rgba(255,233,194,0.98);
+  border-color: rgba(210,153,34,.35);
+}
 .sync-pill.offline .sync-dot{ background:#d29922; }
 
 @keyframes pulse{
@@ -268,19 +194,217 @@ button:active {
   100%{ transform:scale(1); opacity:.6; }
 }
 
-/* Responsive header */
-@media (max-width: 600px){
+/* ======= BUTTONS ======= */
+button{
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: .92rem;
+  transition: transform .08s ease, background .15s ease, border-color .15s ease;
+}
+
+button:hover{
+  background: rgba(255,255,255,0.10);
+  border-color: var(--border-2);
+}
+
+button:active{
+  transform: translateY(1px);
+}
+
+/* botones del header */
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap: 8px;
+}
+
+.btn-connect{
+  background: linear-gradient(180deg, var(--accent), rgba(62,166,255,0.82));
+  color: #041018;
+  border: 0;
+  font-weight: 600;
+}
+.btn-connect:hover{
+  background: linear-gradient(180deg, var(--accent-2), rgba(103,184,255,0.90));
+}
+
+.btn-refresh{
+  width: 44px;
+  min-width: 44px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* ======= ADD NOTE CARD ======= */
+.agregarNota{
+  margin-top: 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 14px;
+  padding: 14px;
+
+  box-shadow: 0 10px 26px rgba(0,0,0,.30);
+
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+
+.agregarNota label{
+  color: rgba(255,255,255,0.88);
+  font-size: 0.92rem;
+}
+
+.agregarNota input,
+.agregarNota textarea{
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 12px;
+  padding: 10px 11px;
+  color: var(--text);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color .15s ease, background .15s ease;
+}
+
+.agregarNota input:focus,
+.agregarNota textarea:focus{
+  border-color: rgba(62,166,255,0.55);
+  background: rgba(0,0,0,0.32);
+}
+
+.agregarNota textarea{
+  resize: vertical;
+  min-height: 96px;
+}
+
+.agregarNota button{
+  align-self: flex-start;
+  background: linear-gradient(180deg, var(--accent), rgba(62,166,255,0.85));
+  color: #041018;
+  border: 0;
+  font-weight: 700;
+  padding: 10px 14px;
+}
+.agregarNota button:hover{
+  background: linear-gradient(180deg, var(--accent-2), rgba(103,184,255,0.92));
+}
+
+/* ======= NOTES LIST ======= */
+.mural-notas{
+  margin-top: 12px;
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+
+.nota-card{
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.35);
+  transition: transform .12s ease, border-color .12s ease, background .12s ease;
+}
+
+.nota-card:hover{
+  transform: translateY(-1px);
+  border-color: rgba(62,166,255,0.28);
+  background: rgba(255,255,255,0.07);
+}
+
+.nota-card h2{
+  margin: 0 0 8px 0;
+  font-size: 1.08rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: rgba(146,199,255,0.95);
+  display:flex;
+  align-items:center;
+  gap: 8px;
+}
+
+.nota-card h2::before{
+  content:"";
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(62,166,255,0.80);
+  box-shadow: 0 0 10px rgba(62,166,255,0.25);
+}
+
+.nota-texto{
+  margin: 0 0 10px 0;
+  color: rgba(255,255,255,0.92);
+  font-size: 0.95rem;
+  line-height: 1.35;
+  white-space: pre-wrap;
+}
+
+.nota-fecha{
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+/* ======= MOBILE ======= */
+@media (max-width: 520px){
+  body{
+    padding: 16px 12px;
+  }
+
+  .titulo{
+    padding: 12px 12px 10px 12px;
+  }
+
+  .titulo::before{
+    left: 10px;
+    top: 10px;
+    bottom: 10px;
+  }
+
+  .header-row-1,
   .header-row-2{
+    padding-left: 12px;
+  }
+
+  .auth-bar{
     flex-direction: column;
     align-items: stretch;
   }
+
+  .auth-left{
+    width: 100%;
+    justify-content: flex-start;
+  }
+
   .header-actions{
     width: 100%;
   }
-  .btn-connect, .btn-refresh{
+
+  .btn-connect{
     width: 100%;
   }
+
+  .btn-refresh{
+    width: 100%;
+    min-width: unset;
+  }
+
   .account-pill{
     max-width: 100%;
+  }
+
+  .agregarNota{
+    padding: 12px;
+  }
+
+  .nota-card{
+    padding: 12px;
   }
 }
