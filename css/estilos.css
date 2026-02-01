@@ -63,7 +63,7 @@ header, main{
 /* Pantallas grandes: todavía un poco más */
 @media (min-width: 1200px){
   header, main{
-    max-width: 980px;
+    max-width: 1100px;
   }
 }
 
@@ -312,6 +312,100 @@ button:active{
   transition: transform .12s ease, border-color .12s ease, background .12s ease;
 }
 
+/* ======= COPY BUTTON (en cada nota) ======= */
+.nota-card{
+  position: relative; /* para ubicar el botón arriba a la derecha */
+}
+
+/* un poquito más de aire arriba para que el botón nunca moleste */
+.nota-card{
+  padding-top: 16px;
+}
+
+/* botón pill, discreto */
+.btn-copy{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  /* más grande y cómodo */
+  padding: 8px 12px;
+  min-height: 34px;
+
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(0,0,0,0.35);
+  color: rgba(255,255,255,0.92);
+
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+
+  user-select: none;
+  transition: transform .08s ease, background .15s ease, border-color .15s ease, opacity .15s ease;
+}
+
+/* el emoji un pelín más legible */
+.btn-copy span{
+  transform: translateY(-0.5px);
+}
+
+.btn-copy:hover{
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.20);
+}
+
+.btn-copy:active{
+  transform: translateY(1px);
+}
+
+/* estado "copiado" */
+.btn-copy.copied{
+  border-color: rgba(46,160,67,.40);
+  background: rgba(46,160,67,.18);
+  color: rgba(200,250,204,0.95);
+}
+
+/* si la nota no tiene texto para copiar */
+.btn-copy:disabled{
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+/* ======= Toast mini (abajo a la derecha) ======= */
+.copy-toast{
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 9999;
+
+  padding: 10px 12px;
+  border-radius: 12px;
+
+  background: rgba(0,0,0,0.55);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.92);
+
+  box-shadow: 0 12px 30px rgba(0,0,0,.45);
+  backdrop-filter: blur(8px);
+
+  font-size: 0.88rem;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+.copy-toast.show{
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .nota-card:hover{
   transform: translateY(-1px);
   border-color: rgba(62,166,255,0.28);
@@ -324,9 +418,21 @@ button:active{
   font-weight: 700;
   letter-spacing: 0.02em;
   color: rgba(146,199,255,0.95);
+
   display:flex;
-  align-items:center;
+  align-items:flex-start; /* permite títulos en varias líneas sin deformar */
   gap: 8px;
+
+  /* reserva espacio para el botón a la derecha */
+  padding-right: 130px;
+  min-height: 34px; /* mismo alto aprox del botón, queda prolijo */
+}
+
+/* en pantallas chicas, damos todavía más aire */
+@media (max-width: 520px){
+  .nota-card h2{
+    padding-right: 150px;
+  }
 }
 
 .nota-card h2::before{

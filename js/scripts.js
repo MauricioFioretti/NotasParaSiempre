@@ -164,6 +164,56 @@ function isOnline() {
   return navigator.onLine !== false;
 }
 
+// ================== COPY HELPERS ==================
+function ensureCopyToastEl() {
+  let el = document.querySelector(".copy-toast");
+  if (el) return el;
+
+  el = document.createElement("div");
+  el.className = "copy-toast";
+  el.textContent = "";
+  document.body.appendChild(el);
+  return el;
+}
+
+let copyToastTimer = null;
+function showCopyToast(msg) {
+  const el = ensureCopyToastEl();
+  el.textContent = msg || "Copiado ✅";
+  el.classList.add("show");
+
+  if (copyToastTimer) clearTimeout(copyToastTimer);
+  copyToastTimer = setTimeout(() => {
+    el.classList.remove("show");
+  }, 1400);
+}
+
+// Copia robusta (Clipboard API + fallback)
+async function copyTextToClipboard(text) {
+  const t = (text || "").toString();
+
+  // Clipboard API (https, o localhost suele funcionar)
+  if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+    await navigator.clipboard.writeText(t);
+    return;
+  }
+
+  // Fallback: textarea + execCommand
+  const ta = document.createElement("textarea");
+  ta.value = t;
+  ta.setAttribute("readonly", "");
+  ta.style.position = "fixed";
+  ta.style.left = "-9999px";
+  ta.style.top = "-9999px";
+  document.body.appendChild(ta);
+  ta.select();
+
+  const ok = document.execCommand("copy");
+  document.body.removeChild(ta);
+
+  if (!ok) throw new Error("copy_failed");
+}
+
 function renderNotas() {
   muralNotas.innerHTML = "";
 
@@ -181,15 +231,50 @@ function renderNotas() {
     card.classList.add("nota-card");
     card.classList.add(index % 2 === 0 ? "nota-oscura" : "nota-clara");
 
+    // ===== Botón COPIAR (solo texto) =====
+    const btnCopy = document.createElement("button");
+    btnCopy.type = "button";
+    btnCopy.className = "btn-copy";
+    btnCopy.innerHTML = "📋 <span>Copiar</span>";
+
+    const textoSolo = (nota?.indicacion || "").toString();
+    if (!textoSolo.trim()) btnCopy.disabled = true;
+
+    btnCopy.addEventListener("click", async () => {
+      const textToCopy = (nota?.indicacion || "").toString();
+
+      try {
+        await copyTextToClipboard(textToCopy);
+
+        // feedback visual en el botón
+        btnCopy.classList.add("copied");
+        btnCopy.innerHTML = "✅ <span>Copiado</span>";
+
+        showCopyToast("Texto copiado ✅");
+
+        setTimeout(() => {
+          btnCopy.classList.remove("copied");
+          btnCopy.innerHTML = "📋 <span>Copiar</span>";
+        }, 1200);
+      } catch (e) {
+        showCopyToast("No se pudo copiar ❌");
+      }
+    });
+
+    card.appendChild(btnCopy);
+
+    // ===== Título =====
     const titulo = document.createElement("h2");
     titulo.innerText = nota.titulo || "";
     card.appendChild(titulo);
 
+    // ===== Texto (lo que se copia) =====
     const pTexto = document.createElement("p");
     pTexto.classList.add("nota-texto");
     pTexto.innerText = nota.indicacion || "";
     card.appendChild(pTexto);
 
+    // ===== Fecha =====
     if (nota.timestamp) {
       const fecha = new Date(nota.timestamp);
       const pFecha = document.createElement("p");
