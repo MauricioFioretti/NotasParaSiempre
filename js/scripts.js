@@ -1,5 +1,7 @@
 // ================== CONFIG ==================
-const API_URL = "https://script.google.com/macros/s/AKfycbyoo4vmC69r4kJpGgAECswXegWbiYRLYyDVkJuzJfvqCTKKyuLS_kEqORm5Kxa36oDm/exec";
+// ✅ Directo a Google Sheets API (sin Apps Script) => más rápido
+const SPREADSHEET_ID = "1TCNsI7-Ax2bWivR1zirS81WLEjmX6pvhV_5Iq7iAOAQ";
+const SHEET_NAME = "notas"; // ⚠️ poné acá el nombre REAL de la pestaña (ej: "notas")
 
 // ================== CONFIG OAUTH (GIS) ==================
 const OAUTH_CLIENT_ID = "996065564370-smpb9t1d296p59vpotbqv8fvv3d5v3sh.apps.googleusercontent.com";
@@ -15,11 +17,9 @@ const OAUTH_SCOPES = [
   "https://www.googleapis.com/auth/userinfo.email",
   "https://www.googleapis.com/auth/userinfo.profile",
 
-  // Scope adicional (elige uno "liviano" pero que rompa la excepción):
-  // Con esto, en modo TESTING, SOLO tus "test users" podrán autorizar.
-  "https://www.googleapis.com/auth/drive.metadata.readonly"
+  // ✅ leer/escribir en la planilla (esto también “rompe la excepción” de Testing)
+  "https://www.googleapis.com/auth/spreadsheets"
 ].join(" ");
-
 
 // LocalStorage OAuth
 const LS_OAUTH = "notas_oauth_token_v1";       // {access_token, expires_at}
@@ -489,51 +489,100 @@ async function ensureOAuthToken(allowInteractive = false, interactivePrompt = "c
 }
 
 // ================== API CLIENT (POST text/plain) ==================
+// ================== API client (DIRECTO Sheets API) ==================
 async function apiPost_(payload) {
-  let r, text;
+  const mode = (payload?.mode || "").toString().toLowerCase();
+  const token = (payload?.access_token || "").toString();
+  if (!token) return { ok: false, error: "auth_required" };
+
+  const sheetEsc = encodeURIComponent(SHEET_NAME);
 
   try {
-    r = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload || {}),
-      cache: "no-store",
-      redirect: "follow"
-    });
+    // ---------- WHOAMI ----------
+    if (mode === "whoami") {
+      const r = await fetch("https://openidconnect.googleapis.com/v1/userinfo", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!r.ok) return { ok: false, error: "whoami_failed" };
+      const data = await r.json();
+      return { ok: true, email: (data?.email || "").toString().toLowerCase().trim() };
+    }
+
+    // ---------- LIST ----------
+    if (mode === "list") {
+      // Lee A2:C (titulo, indicacion, timestamp)
+      const url =
+        `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(SPREADSHEET_ID)}` +
+        `/values/${sheetEsc}!A2:C?majorDimension=ROWS`;
+
+      const r = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+      const txt = await r.text();
+      if (!r.ok) return { ok: false, error: "list_failed", detail: txt.slice(0, 800) };
+
+      const json = JSON.parse(txt);
+      const values = Array.isArray(json?.values) ? json.values : [];
+
+      const notas = values
+        .filter(row => ((row?.[0] || "") + (row?.[1] || "")).toString().trim() !== "")
+        .map(row => ({
+          titulo: (row?.[0] || "").toString(),
+          indicacion: (row?.[1] || "").toString(),
+          timestamp: (row?.[2] || "").toString()
+        }));
+
+      return { ok: true, notas };
+    }
+
+    // ---------- ADD ----------
+    if (mode === "add") {
+      const titulo = (payload?.titulo || "").toString().trim();
+      const indicacion = (payload?.indicacion || "").toString().trim();
+      if (!titulo || !indicacion) return { ok: false, error: "invalid_data" };
+
+      const url =
+        `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(SPREADSHEET_ID)}` +
+        `/values/${sheetEsc}!A:C:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
+
+      const body = {
+        values: [[titulo, indicacion, new Date().toISOString()]]
+      };
+
+      const r = await fetch(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+      });
+
+      const txt = await r.text();
+      if (!r.ok) return { ok: false, error: "add_failed", detail: txt.slice(0, 800) };
+
+      return { ok: true };
+    }
+
+    // ---------- PING ----------
+    if (mode === "ping") return { ok: true, pong: true };
+
+    return { ok: false, error: "bad_mode" };
   } catch (e) {
     return { ok: false, error: "network_error", detail: String(e?.message || e) };
-  }
-
-  try {
-    text = await r.text();
-  } catch (e) {
-    return { ok: false, error: "read_error", status: r.status, detail: String(e?.message || e) };
-  }
-
-  if (!r.ok) {
-    return { ok: false, error: "http_error", status: r.status, detail: (text || "").slice(0, 800) };
-  }
-
-  try {
-    return JSON.parse(text);
-  } catch {
-    return { ok: false, error: "non_json", status: r.status, detail: (text || "").slice(0, 800) };
   }
 }
 
 async function apiCall(mode, payload = {}, opts = {}) {
   const allowInteractive = !!opts.allowInteractive;
 
-  const token = await ensureOAuthToken(allowInteractive, opts.interactivePrompt || "consent");
+  let token = await ensureOAuthToken(allowInteractive, opts.interactivePrompt || "consent");
   const body = { mode, access_token: token, ...(payload || {}) };
 
   let data = await apiPost_(body);
 
-  // si venció / falta auth, reintenta UNA vez con popup (si lo permitimos)
-  if (!data?.ok && (data?.error === "auth_required" || data?.error === "wrong_audience")) {
-    if (!allowInteractive) return data;
-    const token2 = await ensureOAuthToken(true, "consent");
-    body.access_token = token2;
+  // retry si falta auth (por token vencido)
+  if (!data?.ok && (data?.error === "auth_required" || data?.error === "whoami_failed")) {
+    token = await ensureOAuthToken(true, "consent");
+    body.access_token = token;
     data = await apiPost_(body);
   }
 
